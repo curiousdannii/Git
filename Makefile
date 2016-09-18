@@ -17,8 +17,8 @@ GLKMAKEFILE = Make.$(GLK)
 # Step 2: pick a C compiler.
 
 # Generic C compiler
-CC = cc -O2
-OPTIONS = 
+CC = gcc -O3
+OPTIONS = -DUSE_MMAP -DUSE_INLINE
 
 # Best settings for GCC 2.95. This generates faster code than
 # GCC 3, so you should use this setup if possible.
@@ -50,7 +50,7 @@ include $(GLKINCLUDEDIR)/$(GLKMAKEFILE)
 
 CFLAGS = $(OPTIONS) -I$(GLKINCLUDEDIR)
 
-LIBS = -L$(GLKLIBDIR) $(GLKLIB) $(LINKLIBS) 
+LIBS = -L$(GLKLIBDIR) $(GLKLIB) $(LINKLIBS) -lm
 
 HEADERS = version.h git.h config.h compiler.h \
 	memory.h opcodes.h labels.inc
