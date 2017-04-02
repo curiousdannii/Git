@@ -5,9 +5,10 @@
 
 # Note: when using xglk, do NOT define USE_MMAP in step 2, below.
 
-GLK = cheapglk
+#GLK = cheapglk
 #GLK = glkterm
 #GLK = xglk
+GLK = emglken
 
 GLKINCLUDEDIR = ../$(GLK)
 GLKLIBDIR = ../$(GLK)
@@ -17,8 +18,26 @@ GLKMAKEFILE = Make.$(GLK)
 # Step 2: pick a C compiler.
 
 # Generic C compiler
-CC = cc -O2
-OPTIONS = 
+#CC = cc -O2
+#OPTIONS = 
+
+# Emscripten
+CC = emcc \
+	-O3 \
+	--js-library $(GLKINCLUDEDIR)/library.js \
+	--pre-js pre.js \
+	--post-js post.js \
+	-s EMTERPRETIFY=1 \
+	-s EMTERPRETIFY_ASYNC=1 \
+	-s EMTERPRETIFY_WHITELIST='["_glem_fileref_create_by_prompt","_glem_select","_gidispatch_call","_emgiten","_git_perform_glk","_glk_fileref_create_by_prompt","_glk_select","_startProgram"]' \
+	-s EXPORT_NAME='"Git"' \
+	-s EXPORTED_FUNCTIONS='["_emgiten"]' 
+
+#	-s EMTERPRETIFY_FILE='"git.js.bin"' 
+#	-s PRECISE_F32=1
+#	-s MODULARIZE=1
+
+OPTIONS = -DUSE_OWN_POWF
 
 # Best settings for GCC 2.95. This generates faster code than
 # GCC 3, so you should use this setup if possible.
@@ -50,7 +69,7 @@ include $(GLKINCLUDEDIR)/$(GLKMAKEFILE)
 
 CFLAGS = $(OPTIONS) -I$(GLKINCLUDEDIR)
 
-LIBS = -L$(GLKLIBDIR) $(GLKLIB) $(LINKLIBS) 
+LIBS = -L$(GLKLIBDIR) $(GLKLIB) $(LINKLIBS)
 
 HEADERS = version.h git.h config.h compiler.h \
 	memory.h opcodes.h labels.inc
@@ -58,25 +77,27 @@ HEADERS = version.h git.h config.h compiler.h \
 SOURCE = compiler.c gestalt.c git.c git_mac.c git_unix.c \
 	git_windows.c glkop.c heap.c memory.c opcodes.c \
 	operands.c peephole.c savefile.c saveundo.c \
-	search.c terp.c accel.c
+	search.c terp.c accel.c \
+	emgiten.c 
 
 OBJS = git.o memory.o compiler.o opcodes.o operands.o \
 	peephole.o terp.o glkop.o search.o git_unix.o \
-	savefile.o saveundo.o gestalt.o heap.o accel.o
+	savefile.o saveundo.o gestalt.o heap.o accel.o \
+	emgiten.o 
 
 TESTS = test/test.sh \
 	test/Alabaster.gblorb test/Alabaster.walk test/Alabaster.golden
 
-all: git
+all: git.js
 
-git: $(OBJS)
-	$(CC) $(OPTIONS) -o git $(OBJS) $(LIBS)
+git.js: $(OBJS) $(GLKINCLUDEDIR)/Make.$(GLK) $(GLKINCLUDEDIR)/libemglken.a $(GLKINCLUDEDIR)/library.js
+	$(CC) $(OPTIONS) -o $@ $(OBJS) $(LIBS)
 
-install: git
-	cp git $(INSTALLDIR)/git
+install: git.js
+	cp git.js $(INSTALLDIR)/git.js
 
 clean:
-	rm -f *~ *.o git test/*.tmp
+	rm -f *~ *.o git.js* test/*.tmp
 
 $(OBJS): $(HEADERS)
 
