@@ -90,7 +90,7 @@ TESTS = test/test.sh \
 
 all: git.js
 
-git.js: $(OBJS) $(GLKINCLUDEDIR)/Make.$(GLK) $(GLKINCLUDEDIR)/libemglken.a $(GLKINCLUDEDIR)/library.js
+git.js: $(OBJS) pre.js post.js $(GLKINCLUDEDIR)/Make.$(GLK) $(GLKINCLUDEDIR)/libemglken.a $(GLKINCLUDEDIR)/library.js
 	$(CC) $(OPTIONS) -o $@ $(OBJS) $(LIBS)
 
 install: git.js

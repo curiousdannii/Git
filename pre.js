@@ -48,6 +48,8 @@ var Module = {
 			signature += ( this.data[i] < 0x10 ? '0' : '' ) + this.data[i++].toString( 16 )
 		}
 		this.signature = signature
+
+		this.loadMem()
 	},
 
 	// Call emgiten()
@@ -73,6 +75,31 @@ var Module = {
 		return this.signature
 	},
 
-	//emterpreterFile: require( 'fs' ).readFileSync( 'git.js.bin' ),
+	// Find the .mem file
+	locateFile: function( filename )
+	{
+		if ( ENVIRONMENT_IS_NODE )
+		{
+			return __dirname + '/' + filename
+		}
+		return filename
+	},
+
+	// A dummy XHR to delay loading
+	memoryInitializerRequest: typeof XMLHttpRequest !== 'undefined' && new XMLHttpRequest(),
+
+	// Load memory in the browser
+	loadMem: function()
+	{
+		if ( ENVIRONMENT_IS_WEB )
+		{
+			if ( this.options.memdir )
+			{
+				memoryInitializer = this.options.memdir + '/' + memoryInitializer
+			}
+			doBrowserLoad()
+		}
+		delete this.memoryInitializerRequest
+	},
 
 }
