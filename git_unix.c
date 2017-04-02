@@ -4,9 +4,11 @@
 // Designed by Andrew Plotkin <erkyrath@eblong.com>
 // http://www.eblong.com/zarf/glulx/index.html
 
+#include <string.h>
 #include "git.h"
 #include <glk.h>
 #include <glkstart.h> // This comes with the Glk library.
+#include "emglken.h"
 
 #ifdef USE_MMAP
 #include <fcntl.h>
@@ -27,7 +29,11 @@ glkunix_argumentlist_t glkunix_arguments[] =
 
 void fatalError (const char * s)
 {
-    fprintf (stderr, "*** fatal error: %s ***\n", s);
+    char buffer[256];
+    strlcpy( buffer, "*** fatal error: ", 256 );
+    strlcat( buffer, s, 256 );
+    strlcat( buffer, " ***", 256 );
+    glem_fatal_error( buffer );
     exit (1);
 }
 
