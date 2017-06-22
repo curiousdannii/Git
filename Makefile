@@ -23,19 +23,19 @@ GLKMAKEFILE = Make.$(GLK)
 
 # Emscripten
 CC = emcc \
-	-O3 \
+	-O3
+
+LINK_OPTS = \
 	--js-library $(GLKINCLUDEDIR)/library.js \
-	--pre-js pre.js \
-	--post-js post.js \
 	-s EMTERPRETIFY=1 \
 	-s EMTERPRETIFY_ASYNC=1 \
-	-s EMTERPRETIFY_WHITELIST='["_glem_fileref_create_by_prompt","_glem_select","_gidispatch_call","_emgiten","_git_perform_glk","_glk_fileref_create_by_prompt","_glk_select","_startProgram"]' \
-	-s EXPORT_NAME='"Git"' \
-	-s EXPORTED_FUNCTIONS='["_emgiten"]' 
+	-s EMTERPRETIFY_FILE='"git-core.js.bin"' \
+	-s EMTERPRETIFY_WHITELIST='"@whitelist.json"' \
+	-s EXPORTED_FUNCTIONS='["_emgiten"]' \
+	-s MODULARIZE=1
 
-#	-s EMTERPRETIFY_FILE='"git.js.bin"' 
-#	-s PRECISE_F32=1
-#	-s MODULARIZE=1
+#--closure 1 
+#--separate-asm 
 
 OPTIONS = -DUSE_OWN_POWF
 
@@ -88,16 +88,13 @@ OBJS = git.o memory.o compiler.o opcodes.o operands.o \
 TESTS = test/test.sh \
 	test/Alabaster.gblorb test/Alabaster.walk test/Alabaster.golden
 
-all: git.js
+all: git-core.js
 
-git.js: $(OBJS) pre.js post.js $(GLKINCLUDEDIR)/Make.$(GLK) $(GLKINCLUDEDIR)/libemglken.a $(GLKINCLUDEDIR)/library.js
-	$(CC) $(OPTIONS) -o $@ $(OBJS) $(LIBS)
-
-install: git.js
-	cp git.js $(INSTALLDIR)/git.js
+git-core.js: $(OBJS) $(GLKINCLUDEDIR)/Make.$(GLK) $(GLKINCLUDEDIR)/libemglken.a $(GLKINCLUDEDIR)/library.js
+	$(CC) $(OPTIONS) $(LINK_OPTS) -o $@ $(OBJS) $(LIBS)
 
 clean:
-	rm -f *~ *.o git.js* test/*.tmp
+	rm -f *~ *.o git-core* test/*.tmp
 
 $(OBJS): $(HEADERS)
 
@@ -106,22 +103,3 @@ version.h: Makefile
 	echo "#define GIT_MAJOR" $(MAJOR) >> version.h
 	echo "#define GIT_MINOR" $(MINOR) >> version.h
 	echo "#define GIT_PATCH" $(PATCH) >> version.h
-
-DISTZIP = git-$(MAJOR)$(MINOR)$(PATCH).zip
-
-DISTDIR = git-$(MAJOR).$(MINOR).$(PATCH)
-
-DISTFILES = README.txt Makefile Makefile.win win $(HEADERS) $(SOURCE)
-
-dist: $(DISTFILES)
-	rm -rf $(DISTDIR)
-	mkdir $(DISTDIR)
-	cp -r $(DISTFILES) $(DISTDIR)
-	mkdir $(DISTDIR)/test
-	cp $(TESTS) $(DISTDIR)/test
-	find $(DISTDIR) -name "CVS" | xargs rm -rf
-	rm -f $(DISTZIP)
-	zip -r $(DISTZIP) $(DISTDIR)
-
-test: git
-	sh test/test.sh
