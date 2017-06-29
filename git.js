@@ -25,16 +25,6 @@ class Git extends EmglkenVM
 			undo_len: 2000 * 1000,
 		}
 	}
-
-	setsig()
-	{
-		this.signature = ''
-		var i = 0
-		while ( i < 64 )
-		{
-			this.signature += ( this.data[i] < 0x10 ? '0' : '' ) + this.data[i++].toString( 16 )
-		}
-	}
 	
 	start()
 	{
