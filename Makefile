@@ -30,8 +30,10 @@ LINK_OPTS = \
 	-s EMTERPRETIFY=1 \
 	-s EMTERPRETIFY_ASYNC=1 \
 	-s EMTERPRETIFY_FILE='"git-core.js.bin"' \
+	-s EMTERPRETIFY_SYNCLIST='"@$(GLKINCLUDEDIR)/emglken_synclist.json"' \
 	-s EMTERPRETIFY_WHITELIST='"@whitelist.json"' \
 	-s EXPORTED_FUNCTIONS='["_emgiten"]' \
+	-s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall"]' \
 	-s MODULARIZE=1
 
 #--closure 1 
