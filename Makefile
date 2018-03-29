@@ -32,6 +32,7 @@ LINK_OPTS = \
 	-s EMTERPRETIFY_FILE='"git-core.js.bin"' \
 	-s EMTERPRETIFY_WHITELIST='"@whitelist.json"' \
 	-s EXPORTED_FUNCTIONS='["_emgiten"]' \
+	-s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall"]' \
 	-s MODULARIZE=1
 
 #--closure 1 
@@ -74,14 +75,14 @@ LIBS = -L$(GLKLIBDIR) $(GLKLIB) $(LINKLIBS)
 HEADERS = version.h git.h config.h compiler.h \
 	memory.h opcodes.h labels.inc
 
-SOURCE = compiler.c gestalt.c git.c git_mac.c git_unix.c \
-	git_windows.c glkop.c heap.c memory.c opcodes.c \
+SOURCE = compiler.c gestalt.c git.c \
+	glkop.c heap.c memory.c opcodes.c \
 	operands.c peephole.c savefile.c saveundo.c \
 	search.c terp.c accel.c \
 	emgiten.c 
 
 OBJS = git.o memory.o compiler.o opcodes.o operands.o \
-	peephole.o terp.o glkop.o search.o git_unix.o \
+	peephole.o terp.o glkop.o search.o \
 	savefile.o saveundo.o gestalt.o heap.o accel.o \
 	emgiten.o 
 

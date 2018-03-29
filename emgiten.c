@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <math.h>
 #include "emgiten.h"
 
@@ -65,6 +66,16 @@ void emgiten (const git_uint8 * game, git_uint32 gameSize, git_uint32 cacheSize,
     shutdownUndo();
     shutdownMemory();
     glk_exit();
+}
+
+void fatalError (const char * s)
+{
+    char buffer[256];
+    strlcpy( buffer, "*** fatal error: ", 256 );
+    strlcat( buffer, s, 256 );
+    strlcat( buffer, " ***", 256 );
+    glem_fatal_error( buffer );
+    exit (1);
 }
 
 float git_powf(float base, float exp)
