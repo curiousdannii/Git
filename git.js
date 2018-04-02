@@ -9,7 +9,7 @@ https://github.com/curiousdannii/emglken
 
 */
 
-const EmglkenVM = require( '../emglken/emglken_vm.js' )
+const EmglkenVM = require( '../emglken/include/vm.js' )
 
 class Git extends EmglkenVM
 {
