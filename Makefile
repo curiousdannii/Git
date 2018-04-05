@@ -23,7 +23,7 @@ GLKMAKEFILE = Make.$(GLK)
 
 # Emscripten
 CC = emcc \
-	-O3
+	-O0
 
 LINK_OPTS = \
 	--js-library $(GLKINCLUDEDIR)/library.js \
@@ -33,7 +33,8 @@ LINK_OPTS = \
 	-s EMTERPRETIFY_WHITELIST='"@whitelist.json"' \
 	-s EXPORTED_FUNCTIONS='["_emgiten"]' \
 	-s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall"]' \
-	-s MODULARIZE=1
+	-s MODULARIZE=1 \
+	-s WASM=1
 
 #--closure 1 
 #--separate-asm 
