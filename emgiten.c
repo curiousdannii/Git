@@ -4,10 +4,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include "emscripten.h"
 #include "emgiten.h"
 
 // Copied from gitMain from git.c, with an additional glk_exit call
-void emgiten (const git_uint8 * game, git_uint32 gameSize, git_uint32 cacheSize, git_uint32 undoSize)
+void EMSCRIPTEN_KEEPALIVE emgiten (const git_uint8 * game, git_uint32 gameSize, git_uint32 cacheSize, git_uint32 undoSize)
 {
     git_uint32 version;
     enum IOMode ioMode = IO_NULL;

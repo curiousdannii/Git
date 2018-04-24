@@ -1,2 +1,6 @@
+*js.a
 *.o
+CMakeFiles
+cmake_install.cmake
 git-core.js*
+Makefile
