@@ -9,4 +9,8 @@ target_sources( git-core PRIVATE peephole.c savefile.c saveundo.c search.c terp.
 
 emglken_setup( git-core )
 add_definitions( -DUSE_OWN_POWF )
-em_setting( git-core "EXTRA_EXPORTED_RUNTIME_METHODS" "'[\"ccall\"]'" )
+emglken_setting( git-core "EXTRA_EXPORTED_RUNTIME_METHODS" "'[\"ccall\"]'" )
+
+emglken_bundle( git git-core )
+
+emglken_test( git git-core glulxercise )
