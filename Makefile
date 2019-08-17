@@ -33,7 +33,8 @@ LINK_OPTS = \
 	-s EMTERPRETIFY_WHITELIST='"@whitelist.json"' \
 	-s EXPORTED_FUNCTIONS='["_emgiten"]' \
 	-s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall"]' \
-	-s MODULARIZE=1
+	-s MODULARIZE=1 \
+	-s WASM=0
 
 #--closure 1 
 #--separate-asm 
